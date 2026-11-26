@@ -74,6 +74,8 @@ class McpPolicy:
     self_defined: str = "warn"  # deny | warn | allow
     # None: not set (effective false); an explicit value makes the policy non-empty.
     trust_transitive: bool | None = None
+    # Every registry MCP server declared in the root apm.yml must pin ``version``.
+    require_pinned_version: bool = False
 
 
 @dataclass(frozen=True)

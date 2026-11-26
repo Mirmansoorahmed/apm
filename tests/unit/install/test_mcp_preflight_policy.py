@@ -94,6 +94,54 @@ def _patch_discover(fetch_result: PolicyFetchResult):
     )
 
 
+def _pinned_version_policy(enforcement: str) -> ApmPolicy:
+    return ApmPolicy(
+        enforcement=enforcement,
+        mcp=McpPolicy(require_pinned_version=True),
+    )
+
+
+class TestRequirePinnedVersion:
+    def test_unpinned_registry_server_blocks(self):
+        fetch = _make_fetch_result(policy=_pinned_version_policy("block"))
+        dep = _make_mcp_dep("io.github.github/github-mcp-server")
+
+        with _patch_discover(fetch), pytest.raises(PolicyBlockError) as exc_info:
+            run_policy_preflight(
+                project_root=Path("/tmp/fake"),
+                mcp_deps=[dep],
+                logger=_make_logger(),
+            )
+
+        failed = [c.name for c in exc_info.value.audit_result.failed_checks]
+        assert failed == ["mcp-pinned-version"]
+
+    def test_pinned_registry_server_proceeds(self):
+        fetch = _make_fetch_result(policy=_pinned_version_policy("block"))
+        dep = _make_mcp_dep("io.github.github/github-mcp-server")
+        dep.version = "1.2.3"
+
+        with _patch_discover(fetch):
+            result, _active = run_policy_preflight(
+                project_root=Path("/tmp/fake"),
+                mcp_deps=[dep],
+                logger=_make_logger(),
+            )
+
+        assert result is not None
+
+    def test_unpinned_registry_server_under_warn_does_not_raise(self):
+        fetch = _make_fetch_result(policy=_pinned_version_policy("warn"))
+        dep = _make_mcp_dep("io.github.github/github-mcp-server")
+
+        with _patch_discover(fetch):
+            run_policy_preflight(
+                project_root=Path("/tmp/fake"),
+                mcp_deps=[dep],
+                logger=_make_logger(),
+            )
+
+
 # -- Test: escape hatches (--no-policy, APM_POLICY_DISABLE) -----------
 
 

@@ -184,6 +184,7 @@ Rules over MCP server references, including transitive ones declared by deep dep
 | `transport.allow`  | list or null          | `null`  | Allowed transports: `stdio`, `streamable-http`, `sse` (`http` is an alias of `streamable-http`). Checked against the effective transport APM writes, including registry servers, by install, update and `apm audit --ci`; a registry server whose transport cannot be resolved is a violation (blocked under `enforcement: block`, a warning under the default `warn`). `null` = no opinion. |
 | `self_defined`     | enum                  | `warn`  | `allow` / `warn` / `deny` -- treatment of MCP servers defined inline in `apm.yml`.   |
 | `trust_transitive` | boolean               | `false` | When `false`, transitive MCP servers must be explicitly allow-listed.                |
+| `require_pinned_version` | boolean | `false` | When `true`, every registry MCP server declared in the root `apm.yml` must set `version:` to a specific release; a missing, empty or `latest` value violates the `mcp-pinned-version` check and is routed through `policy.enforcement` (`warn` / `block`). Self-defined servers (`registry: false`) and transitive servers are not judged: the first has no registry release to pin, and a consumer cannot edit the second's manifest. **Enabling on existing projects will likely surface violations; roll out with `enforcement: warn` first.** |
 
 ## compilation
 
@@ -353,6 +354,7 @@ unmanaged-files check.
 | `dependencies.require_pinned_constraint` | Logical OR -- once a parent enables it, child cannot relax.            |
 | `mcp.self_defined`          | Stricter wins (`deny` > `warn` > `allow`).                                       |
 | `mcp.trust_transitive`      | Logical AND (`true` only if both sides true).                                    |
+| `mcp.require_pinned_version` | Logical OR (`true` if either side is `true`).                                   |
 | `manifest.scripts`          | Stricter wins (`deny` > `allow`).                                                |
 | `unmanaged_files.action`    | Stricter wins (`deny` > `warn` > `ignore`).                                      |
 | `unmanaged_files.exclude`   | Union, deduplicated; additive-only. `null` and `[]` both preserve the parent list; a child cannot clear an inherited `exclude`. |
@@ -435,6 +437,7 @@ mcp:
       - streamable-http
   self_defined: deny
   trust_transitive: false
+  require_pinned_version: true
 
 compilation:
   target:

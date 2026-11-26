@@ -310,6 +310,18 @@ class TestMcpMerge(unittest.TestCase):
         )
         self.assertEqual(result.mcp.self_defined, "deny")
 
+    def test_require_pinned_version_cannot_be_relaxed(self):
+        for parent, child in ((True, False), (False, True), (True, True)):
+            result = merge_policies(
+                ApmPolicy(mcp=McpPolicy(require_pinned_version=parent)),
+                ApmPolicy(mcp=McpPolicy(require_pinned_version=child)),
+            )
+            self.assertTrue(result.mcp.require_pinned_version)
+
+    def test_require_pinned_version_defaults_off(self):
+        result = merge_policies(ApmPolicy(), ApmPolicy())
+        self.assertFalse(result.mcp.require_pinned_version)
+
     def test_trust_transitive_true_to_false(self):
         result = merge_policies(
             ApmPolicy(mcp=McpPolicy(trust_transitive=True)),

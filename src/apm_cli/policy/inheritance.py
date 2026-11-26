@@ -234,6 +234,7 @@ def _merge_mcp(parent: McpPolicy, child: McpPolicy) -> McpPolicy:
             if parent.trust_transitive is None and child.trust_transitive is None
             else bool(parent.trust_transitive) and bool(child.trust_transitive)
         ),
+        require_pinned_version=parent.require_pinned_version or child.require_pinned_version,
     )
 
 

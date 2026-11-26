@@ -50,6 +50,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -127,6 +128,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -206,6 +208,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -283,6 +286,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -360,6 +364,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -439,6 +444,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -518,6 +524,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -595,6 +602,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -672,6 +680,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -749,6 +758,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -831,6 +841,7 @@
       "deny": [
         "io.github.untrusted/*"
       ],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": [
@@ -911,6 +922,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -988,6 +1000,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1065,6 +1078,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1144,6 +1158,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1223,6 +1238,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1302,6 +1318,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1379,6 +1396,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1465,6 +1483,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1542,6 +1561,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null
@@ -1640,6 +1660,7 @@
         "io.github.modelcontextprotocol/*"
       ],
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": [
@@ -1722,6 +1743,7 @@
     "mcp": {
       "allow": null,
       "deny": [],
+      "require_pinned_version": false,
       "self_defined": "warn",
       "transport": {
         "allow": null

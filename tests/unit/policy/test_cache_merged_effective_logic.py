@@ -119,6 +119,7 @@ ACTIONABLE_POLICY_CASES = {
     ("mcp", "transport", "allow"): "mcp:\n  transport:\n    allow: [stdio]\n",
     ("mcp", "self_defined"): "mcp:\n  self_defined: deny\n",
     ("mcp", "trust_transitive"): "mcp:\n  trust_transitive: true\n",
+    ("mcp", "require_pinned_version"): "mcp:\n  require_pinned_version: true\n",
     (
         "compilation",
         "target",

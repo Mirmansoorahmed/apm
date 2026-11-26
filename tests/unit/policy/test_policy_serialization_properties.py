@@ -103,6 +103,7 @@ def enforceable_policy_data(draw: st.DrawFn) -> dict[str, Any]:
             },
             "self_defined": draw(st.sampled_from(("allow", "deny"))),
             "trust_transitive": True,
+            "require_pinned_version": True,
         },
         "compilation": {
             "target": {
@@ -185,6 +186,7 @@ def _enforceable_fields(policy: ApmPolicy) -> dict[str, Any]:
         "mcp.transport.allow": policy.mcp.transport.allow,
         "mcp.self_defined": policy.mcp.self_defined,
         "mcp.trust_transitive": policy.mcp.trust_transitive,
+        "mcp.require_pinned_version": policy.mcp.require_pinned_version,
         "compilation.target.allow": policy.compilation.target.allow,
         "compilation.target.enforce": policy.compilation.target.enforce,
         "compilation.strategy.enforce": policy.compilation.strategy.enforce,
@@ -300,12 +302,12 @@ def _assert_policy_ttl_refreshes(data: dict[str, Any]) -> None:
 def test_effective_policy_cache_serialization_is_lossless_and_canonical(
     data: dict[str, Any],
 ) -> None:
-    """Parse -> effective policy -> cache YAML -> parse preserves all 39 fields."""
+    """Parse -> effective policy -> cache YAML -> parse preserves all 40 fields."""
     parsed, _ = load_policy(_policy_yaml(data))
     effective = resolve_policy_chain([parsed])
 
     assert set(_enforceable_fields(effective)) == _schema_enforceable_field_paths(effective)
-    assert len(_enforceable_fields(effective)) == 40
+    assert len(_enforceable_fields(effective)) == 41
     _assert_cache_round_trip(effective)
 
 

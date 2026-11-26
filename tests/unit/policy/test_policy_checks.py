@@ -17,6 +17,7 @@ from apm_cli.policy.policy_checks import (
     _check_includes_explicit,  # noqa: F401
     _check_mcp_allowlist,
     _check_mcp_denylist,
+    _check_mcp_pinned_version,
     _check_mcp_self_defined,
     _check_mcp_transport,
     _check_required_executable_untrusted,
@@ -496,6 +497,62 @@ class TestMcpSelfDefined:
         policy = McpPolicy(self_defined="deny")
         result = _check_mcp_self_defined(mcp, policy)
         assert result.passed
+
+
+# -- Check 10a: mcp-pinned-version ----------------------------------
+
+
+class TestMcpPinnedVersion:
+    def test_disabled_by_default(self):
+        mcp = _make_mcp_deps(["io.github.owner/server"])
+        result = _check_mcp_pinned_version(mcp, McpPolicy())
+        assert result.passed
+        assert not result.details
+
+    def test_fail_unpinned_registry_server(self):
+        mcp = _make_mcp_deps(["io.github.owner/server"])
+        result = _check_mcp_pinned_version(mcp, McpPolicy(require_pinned_version=True))
+        assert not result.passed
+        assert result.details == [
+            "io.github.owner/server: no pinned version; resolves to the registry's "
+            "latest release (declare `version:` in apm.yml)"
+        ]
+        assert [s.ref for s in result.subjects] == ["io.github.owner/server"]
+
+    @pytest.mark.parametrize("version", ["", "  ", "latest", "LATEST"])
+    def test_fail_placeholder_versions(self, version):
+        mcp = _make_mcp_deps([{"name": "io.github.owner/server", "version": version}])
+        result = _check_mcp_pinned_version(mcp, McpPolicy(require_pinned_version=True))
+        assert not result.passed
+
+    def test_pass_pinned_registry_server(self):
+        mcp = _make_mcp_deps([{"name": "io.github.owner/server", "version": "1.4.2"}])
+        result = _check_mcp_pinned_version(mcp, McpPolicy(require_pinned_version=True))
+        assert result.passed
+
+    def test_self_defined_server_is_not_judged(self):
+        mcp = _make_mcp_deps(
+            [{"name": "local-srv", "registry": False, "transport": "stdio", "command": "node"}]
+        )
+        result = _check_mcp_pinned_version(mcp, McpPolicy(require_pinned_version=True))
+        assert result.passed
+
+    def test_transitive_server_is_not_judged(self):
+        mcp = _make_mcp_deps(["io.github.owner/server"])
+        mcp[0].resolved_by = "some/package"
+        result = _check_mcp_pinned_version(mcp, McpPolicy(require_pinned_version=True))
+        assert result.passed
+
+    def test_each_unpinned_server_is_named_once(self):
+        mcp = _make_mcp_deps(
+            [
+                "io.github.owner/one",
+                {"name": "io.github.owner/two", "version": "2.0.0"},
+                "io.github.owner/one",
+            ]
+        )
+        result = _check_mcp_pinned_version(mcp, McpPolicy(require_pinned_version=True))
+        assert [s.ref for s in result.subjects] == ["io.github.owner/one"]
 
 
 # -- Check 11: compilation-target -----------------------------------

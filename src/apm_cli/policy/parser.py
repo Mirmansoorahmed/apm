@@ -108,6 +108,7 @@ _ENUM_FIELDS: tuple[tuple[tuple[str, ...], frozenset[str]], ...] = (
 _BOOL_FIELDS: tuple[tuple[str, ...], ...] = (
     ("dependencies", "require_pinned_constraint"),
     ("mcp", "trust_transitive"),
+    ("mcp", "require_pinned_version"),
     ("compilation", "source_attribution"),
     ("manifest", "require_explicit_includes"),
     ("registry_source", "allow_non_registry"),
@@ -336,6 +337,9 @@ def _build_policy(data: dict) -> ApmPolicy:
         ),
         self_defined=mcp_data.get("self_defined", McpPolicy.self_defined),
         trust_transitive=mcp_data.get("trust_transitive", McpPolicy.trust_transitive),
+        require_pinned_version=bool(
+            mcp_data.get("require_pinned_version", McpPolicy.require_pinned_version)
+        ),
     )
 
     comp_data = data.get("compilation") or {}

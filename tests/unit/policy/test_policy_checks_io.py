@@ -935,8 +935,8 @@ class TestUnmanagedNonDuplication:
 
 # -- Integration: run_policy_checks ---------------------------------
 class TestRunPolicyChecks:
-    def test_returns_all_22_checks(self, tmp_path):
-        """Full run should produce exactly 22 checks."""
+    def test_returns_all_23_checks(self, tmp_path):
+        """Full run should produce exactly 23 checks."""
         _write_apm_yml(
             tmp_path,
             {
@@ -960,7 +960,7 @@ class TestRunPolicyChecks:
 
         policy = ApmPolicy()
         result = run_policy_checks(tmp_path, policy)
-        assert len(result.checks) == 22
+        assert len(result.checks) == 23
         # Default policy = all checks pass
         assert result.passed
 

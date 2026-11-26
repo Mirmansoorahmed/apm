@@ -1724,6 +1724,7 @@ def _policy_to_dict(policy: ApmPolicy) -> dict:
             },
             "self_defined": policy.mcp.self_defined,
             "trust_transitive": policy.mcp.trust_transitive,
+            "require_pinned_version": policy.mcp.require_pinned_version,
         },
         "compilation": {
             "target": {
@@ -1812,6 +1813,7 @@ def _is_policy_empty(policy: ApmPolicy) -> bool:
             policy.mcp.transport.allow is not None,
             policy.mcp.self_defined != "warn",
             policy.mcp.trust_transitive is not None,
+            policy.mcp.require_pinned_version,
             policy.compilation.target.allow is not None,
             policy.compilation.target.enforce is not None,
             policy.compilation.strategy.enforce is not None,

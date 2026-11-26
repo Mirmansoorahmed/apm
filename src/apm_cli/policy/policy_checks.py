@@ -778,6 +778,50 @@ def _check_mcp_self_defined(
     )
 
 
+_UNPINNED_VERSIONS = frozenset({"", "latest"})
+
+
+def _check_mcp_pinned_version(mcp_deps: list, policy: McpPolicy) -> CheckResult:
+    """Check 10a: registry MCP servers in apm.yml pin an explicit ``version``.
+
+    Skipped (passes vacuously) when ``mcp.require_pinned_version`` is ``False``,
+    the default. Only servers declared in the root apm.yml are judged: the
+    consumer cannot edit a transitive package's own manifest, and a
+    self-defined server (``registry: false``) has no registry release to pin.
+    """
+    check_name = "mcp-pinned-version"
+    if not policy.require_pinned_version:
+        return CheckResult(
+            name=check_name,
+            passed=True,
+            message="MCP version pin not required by policy",
+        )
+
+    violations = {
+        m.name: PolicySubject(
+            m.name,
+            "no pinned version; resolves to the registry's latest release "
+            "(declare `version:` in apm.yml)",
+            remedy=None,
+        )
+        for m in mcp_deps
+        if m.registry is not False
+        and not getattr(m, "resolved_by", None)
+        and str(m.version or "").strip().lower() in _UNPINNED_VERSIONS
+    }
+    if not violations:
+        return CheckResult(
+            name=check_name,
+            passed=True,
+            message="All registry MCP servers pin a version",
+        )
+    return _subjects_result(
+        check_name,
+        f"{len(violations)} registry MCP server(s) do not pin a version",
+        list(violations.values()),
+    )
+
+
 _TRUST_TRANSITIVE = "mcp-trust-transitive"
 _TRUST_TRANSITIVE_REASON = "transitive server not in mcp.allow (mcp.trust_transitive: false)"
 
@@ -834,7 +878,7 @@ def _parked_trust_transitive(
 
 
 def mcp_policy_checks(mcp_list: list, policy: ApmPolicy) -> list[CheckResult]:
-    """Run org MCP checks 7-10b (allow, deny, transport, self-defined, trust_transitive).
+    """Run org MCP checks 7-10b (allow, deny, transport, self-defined, pinned version, trust_transitive).
 
     The one composition of the MCP checks: the install gate and the native
     Claude plugin route (which vets the servers a plugin declares) both use it.
@@ -844,6 +888,7 @@ def mcp_policy_checks(mcp_list: list, policy: ApmPolicy) -> list[CheckResult]:
         _check_mcp_denylist(mcp_list, policy.mcp),
         _check_mcp_transport(_effective_mcp_transports(mcp_list, policy.mcp), policy.mcp),
         _check_mcp_self_defined(mcp_list, policy.mcp),
+        _check_mcp_pinned_version(mcp_list, policy.mcp),
         _check_mcp_trust_transitive(mcp_list, policy.mcp),
     ]
 

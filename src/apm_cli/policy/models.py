@@ -38,6 +38,7 @@ _CHECK_ARTIFACT_MAP: dict[str, str] = {
     "mcp-transport": "apm.yml",
     "mcp-self-defined": "apm.yml",
     "mcp-trust-transitive": "apm.yml",
+    "mcp-pinned-version": "apm.yml",
     "compilation-target": "apm.yml",
     "compilation-strategy": "apm.yml",
     "source-attribution": "apm.yml",
